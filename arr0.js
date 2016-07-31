@@ -31,7 +31,7 @@ function log_time(fn) {
   console.log(`elapsed: ${elapsed} ms`)
 }
 
-function timer({target=1, numTrials=0, minTrials=3, numWarmUp=1, discard=1}) {
+function timer({target=1, numTrials=0, minTrials=3, numWarmUp=1, percentile=[0.05, 0.10, 0.15]}) {
   return function (fn, ...args) {
     const call = () => fn(...args)
     const results = []
@@ -44,16 +44,15 @@ function timer({target=1, numTrials=0, minTrials=3, numWarmUp=1, discard=1}) {
     if (numTrials === 0) {
       const start = now()
       // FIXME: Expensive for tiny fn.
-      while (times.length < minTrials + discard * 2 || now() - start < target) {
+      while (times.length < minTrials || now() - start < target) {
         const [elapsed, result] = time(call)
         times.push(elapsed)
         results.push(result)
       }
     }    
     else 
-      for (let i = 0; i < numTrials + 2 * discard; ++i) {
+      for (let i = 0; i < numTrials; ++i) {
         const [elapsed, result] = time(call)
-        console.log(elapsed, result)
         times.push(elapsed)
         results.push(result)
       }
@@ -62,32 +61,25 @@ function timer({target=1, numTrials=0, minTrials=3, numWarmUp=1, discard=1}) {
     if (!allEqual(results))
       console.warn('varying results in timed function')
 
-    // Discard high and low.
-    let sorted = times.sort()
-    for (let i = 0; i < discard; ++i) {
-      sorted.shift()
-      sorted.pop()
+    if (false) {
+      const fs = require('fs')
+      fs.writeFile('arr0.csv', times.join('\n') + '\n')
     }
 
-    // Calculate stats.
-    // FIXME: Elsewhere.
-    let trials = sorted.length
-    let sum1 = 0
-    let sum2 = 0
-    for (const t of sorted) {
-      sum1 += t
-      sum2 += t * t
-    }
-    const mean = sum1 / trials
-    const std = Math.sqrt(sum2 / trials - mean * mean)
-    
-    const meanFmt = (mean / MSEC).toFixed(1)
-    const stdFmt = (std / MSEC).toFixed(1)
-    let output = `${trials} trials: (${meanFmt} ± ${stdFmt}) ms`
+    const sorted = times.sort()
+    const num = sorted.length
+    const get_pct = p => sorted[Math.round(num * p)]
+    const [pct_lo, pct, pct_hi] = percentile
+    const val = get_pct(pct)
+    const err = get_pct(pct_hi) - get_pct(pct_lo)
+
+    const valFmt = (val / MSEC).toFixed(3)
+    const errFmt = (err / MSEC).toFixed(3)
+    let output = `${num} trials: (${valFmt} ± ${errFmt}) ms`
 
     const size = args[0].length
     if (size) {
-      const perFmt = (mean / size / NSEC).toFixed(1)
+      const perFmt = (val / size / NSEC).toFixed(2)
       output += ` | size: ${size}: ${perFmt} ns/el`
     }
 
@@ -134,7 +126,7 @@ v8.optimizeFunctionOnNextCall(cross)
 cross(arr0, arr1)
 console.log(v8.getOptimizationStatus(cross))
 
-timer({numWarmUp: 64})(cross, arr0, arr1)
+timer({numWarmUp: 32, target: 1})(cross, arr0, arr1)
 
 if (false) {
   for (let i = 0; i < 8; ++i) log_time(() => cross(arr0, arr1))
