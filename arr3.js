@@ -153,7 +153,7 @@ function cross(arr0, arr1) {
 
 //------------------------------------------------------------------------------
 
-const N = 1 << 30
+const N = 1 << 29
 const arr0 = new Float64Array(N)
 const arr1 = new Float64Array(N)
 for (let i = 0; i < N; ++i) {
@@ -173,6 +173,6 @@ const tm = timer({numWarmUp: 32, target: 1})
 // tm(cross, arr0, arr1)
 // tm(sum, arr0)
 // tm(moments, arr0, 4)
-for (let i = 8; i <= 30; ++i)
+for (let i = 8; i <= 29; ++i)
   tm(moments5, arr0.slice(0, 1 << i))
 
