@@ -30,7 +30,7 @@ function log_time(fn) {
   console.log(`elapsed: ${elapsed} ms`)
 }
 
-function timer({target=1, numTrials=0, minTrials=3, maxTrials=1024, numWarmUp=1, percentile=[0.05, 0.10, 0.15]}) {
+function timer({target=1, numTrials=0, minTrials=5, maxTrials=1024, numWarmUp=1, percentile=[0.05, 0.10, 0.15]}) {
   return function (fn, ...args) {
     const call = () => fn(...args)
 
@@ -153,7 +153,7 @@ function cross(arr0, arr1) {
 
 //------------------------------------------------------------------------------
 
-const N = 1 << 28
+const N = 1 << 30
 const arr0 = new Float64Array(N)
 const arr1 = new Float64Array(N)
 for (let i = 0; i < N; ++i) {
@@ -173,5 +173,6 @@ const tm = timer({numWarmUp: 32, target: 1})
 // tm(cross, arr0, arr1)
 // tm(sum, arr0)
 // tm(moments, arr0, 4)
-for (let i = 8; i < 29; ++i)
+for (let i = 8; i <= 30; ++i)
   tm(moments5, arr0.slice(0, 1 << i))
+
