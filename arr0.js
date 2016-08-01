@@ -7,9 +7,6 @@ const USEC = 1E-6
 const NSEC = 1E-9
 const now = () => _now() * MSEC
 
-// ???
-let zip = rows => rows[0].map((_, c) => rows.map(row => row[c]))
-
 let allEqual = arr => arr.every(e => e === arr[0])
 
 /**

@@ -1,6 +1,5 @@
 "use strict"
 
-const _ = require('underscore')
 const _now = require('performance-now')
 const v8 = require('v8-natives')
 

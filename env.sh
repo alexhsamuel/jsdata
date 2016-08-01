@@ -1,7 +1,8 @@
-NODE=$HOME/sw/node-v6.3.1-darwin-x64/bin/node
+NODE_DIR=$HOME/sw/node-v6.3.1-darwin-x64
+PATH=$NODE_DIR/bin:$PATH
 
 function node() {
-    $NODE --allow-natives-syntax "$@";
+    $NODE_DIR/bin/node --allow-natives-syntax "$@";
 }
 
 
