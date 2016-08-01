@@ -1,7 +1,12 @@
 "use strict"
 
-const _now = require('performance-now')
-const v8 = require('v8-natives')
+function worker_function() {
+
+const loadTime = performance.now()
+
+function _now() {
+  return performance.now() - loadTime
+}
 
 const MSEC = 1E-3
 const USEC = 1E-6
@@ -31,14 +36,6 @@ function log_time(fn) {
 function timer({target=1, numTrials=0, minTrials=5, maxTrials=1024, numWarmUp=1, percentile=[0.05, 0.10, 0.15]}) {
   return function (fn, ...args) {
     const call = () => fn(...args)
-
-    // Make sure the function is optimized.
-    if (v8.getOptimizationStatus(fn) != 1) {
-      v8.optimizeFunctionOnNextCall(fn)
-      call()
-      if (v8.getOptimizationStatus(fn) != 1) 
-        console.warn('not optimized:', fn.name)
-    }
 
     const results = []
     const times = []
@@ -73,11 +70,6 @@ function timer({target=1, numTrials=0, minTrials=5, maxTrials=1024, numWarmUp=1,
     if (false && wrong.length > 0)
       console.warn('varying results in timed function:', wrong)
 
-    if (false) {
-      const fs = require('fs')
-      fs.writeFile('arr0.csv', times.join('\n') + '\n')
-    }
-
     const sorted = times.sort()
     const num = sorted.length
     const get_pct = p => sorted[Math.round(num * p)]
@@ -93,7 +85,7 @@ function timer({target=1, numTrials=0, minTrials=5, maxTrials=1024, numWarmUp=1,
       time: val,
       time_err: err
     }
-    console.log(JSON.stringify(res))
+    return res
   }
   
 }
@@ -151,26 +143,60 @@ function cross(arr0, arr1) {
 
 //------------------------------------------------------------------------------
 
-const N = 1 << 29
+const SCALE = 22
+const N = 1 << SCALE
+
+console.log('creating arrays')
 const arr0 = new Float64Array(N)
 const arr1 = new Float64Array(N)
 for (let i = 0; i < N; ++i) {
   arr0[i] = i
   arr1[i] = 2 * (i % 2) - 1
 }
-
-if (false) {
-  console.log('optimizing')
-  console.log(v8.getOptimizationStatus(cross))
-  v8.optimizeFunctionOnNextCall(cross)
-  cross(arr0, arr1)
-  console.log(v8.getOptimizationStatus(cross))
-}
+console.log('creating arrays done')
 
 const tm = timer({numWarmUp: 32, target: 1})
-// tm(cross, arr0, arr1)
-// tm(sum, arr0)
-// tm(moments, arr0, 4)
-for (let i = 8; i <= 29; ++i)
-  tm(moments5, arr0.slice(0, 1 << i))
+
+onmessage = function (event) {
+  const scale = event.data
+  const result = tm(moments5, arr0.slice(0, 1 << scale))
+  console.log('rate:', result.time / result.size)
+  postMessage(JSON.stringify(result))
+}
+
+}  // worker_function
+
+//------------------------------------------------------------------------------
+
+// This is in case of normal worker start
+if (window != self)
+  worker_function()
+else {
+
+  const $ = require('jquery-browserify')
+
+  $(function () {
+
+  function log_output(text) {
+    $('#output').append(text + '\n')
+  }
+
+  const worker = new Worker(
+    URL.createObjectURL(
+      new Blob(["(" + worker_function.toString() + ")()"], 
+               {type: 'text/javascript'})))
+
+  let next = 8;
+
+  worker.onmessage = function (event) {
+    log_output(event.data)
+    if (next <= 22)
+      worker.postMessage(next++)
+  };
+
+  worker.postMessage(next++);
+
+  })
+
+}
 
