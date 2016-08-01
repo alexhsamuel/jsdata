@@ -7,7 +7,7 @@ const v8 = require('v8-natives')
 const MSEC = 1E-3
 const USEC = 1E-6
 const NSEC = 1E-9
-// const now = () => _now() * MSEC
+const now = () => _now() * MSEC
 
 /**
  * Times invocation of `fn`.
