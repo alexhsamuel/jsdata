@@ -7,9 +7,7 @@ const v8 = require('v8-natives')
 const MSEC = 1E-3
 const USEC = 1E-6
 const NSEC = 1E-9
-const now = () => _now() * MSEC
-
-let allEqual = arr => arr.every(e => e == arr[0])
+// const now = () => _now() * MSEC
 
 /**
  * Times invocation of `fn`.
@@ -29,6 +27,7 @@ function log_time(fn) {
   elapsed = (elapsed / MSEC).toFixed(1)
   console.log(`elapsed: ${elapsed} ms`)
 }
+
 
 function timer({target=1, numTrials=0, minTrials=5, maxTrials=1024, numWarmUp=1, percentile=[0.05, 0.10, 0.15]}) {
   return function (fn, ...args) {
