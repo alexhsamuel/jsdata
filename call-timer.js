@@ -1,6 +1,9 @@
 (function () {
+  const _ = require('underscore')
   const _now = require('performance-now')
-  now = () => _now() * 1E-3;
+
+  const MSEC = 1E-3
+  const now = () => _now() * MSEC
 
   /**
    * Times invocation of zero-argument `fn`.
@@ -8,54 +11,36 @@
    * @return
    *   An array of the runtime in sec and the return value.
    */
-  function time(fn) {
+  function time(fn, count=1) {
     const start = now()
-    const result = fn()
+    for (let i = 0; i < count; ++i) fn()
     const end = now()
-    return [end - start, result]
+    return end - start
   }
 
-  function makeRaw({target=1, numTrials=0, minTrials=5, maxTrials=1024, numWarmUp=1}) {
-    return function (fn, ...args) {
-      const call = () => fn(...args)
-
-      const results = []
-      const times = []
-
-      // Warm up.
-      for (let i = 0; i < numWarmUp; ++i) results.push(call())
-
-      // Trial loop.
-      if (numTrials === 0) {
-        const start = now()
-        // FIXME: Expensive for tiny fn.
-        while (
-          times.length < minTrials 
-          || (now() - start < target && times.length < maxTrials)) {
-          const [elapsed, result] = time(call)
-          times.push(elapsed)
-          results.push(result)
-        }
-      }    
-      else 
-        for (let i = 0; i < numTrials; ++i) {
-          const [elapsed, result] = time(call)
-          times.push(elapsed)
-          results.push(result)
-        }
-
-      // Check results.
-      const result = results[0]
-      const wrong = results.filter(e => e != result)  // FIXME: Doesn't work.
-      if (wrong.length > 0)
-        console.warn('varying results in timed function:', wrong)
-
-      return [times, result];
+  function estimateTime(fn, minTime=MSEC) {
+    for (let count = 1;; count *= 10) {
+      console.log('estimating:', count)
+      const elapsed = time(fn, count)
+      if (elapsed > minTime) return elapsed / count
     }
   }
 
-  function make(timerArgs = {percentile: [0.05, 0.10, 0.15]}) {
-    const rawTimer = makeRaw(timerArgs)
+  function rawTimer({target, trials} = {target: 1, trials: 8}) {
+    return function (fn, ...args) {
+      const call = () => fn(...args)
+
+      const estimate = estimateTime(call)
+      console.log('estimate:', estimate)
+      const count = Math.max(1, Math.round(target / trials / estimate))
+      console.log('count:', count)
+
+      return _(trials).times(() => time(call, count) / count)
+    }
+  }
+
+  function timer(timerArgs = {percentile: [0.05, 0.10, 0.15]}) {
+    const rawTimer = rawTimer(timerArgs)
 
     return function (fn, ...args) {
       const name = fn.name
@@ -86,10 +71,10 @@
   module.exports = {
     MSEC: 1E-3,
     USEC: 1E-6,
-    NSEC: 1E-6,
+    NSEC: 1E-9,
     
-    make: make,
-    makeRaw: makeRaw,
+    timer: timer,
+    rawTimer: rawTimer,
     now: now,
     time: time,
   }
