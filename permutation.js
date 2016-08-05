@@ -2,6 +2,7 @@
   const assert = require('assert')
 
   const SORTED = Symbol('sorted')
+  const UNIQUE = Symbol('unique')
   const IDENTITY = Symbol('identity permutation')
 
   function getArrType(len) {
@@ -13,6 +14,8 @@
   }
 
   module.exports = {
+
+    cmp: (a, b) => a - b,
 
     /**
      * Returns the inverse permutation.
@@ -39,6 +42,23 @@
       const permuted = new arr.constructor(len)
       for (let i = 0; i < len; ++i) permuted[i] = arr[perm[i]]
       return permuted
+    },
+
+    isUnique(arr) {
+      assert(this.isSorted(arr))
+      const len = arr.length
+      if (arr === IDENTITY || arr[UNIQUE] || len < 2) return true
+
+      let val = arr[0]
+      for (let i = 1; i < len; ++i) {
+        if (arr[i] === val) return false
+        val = arr[i]
+      }
+
+      // Looks good.  Mark it unique, for next time.
+      arr[UNIQUE] = true
+
+      return true
     },
 
     isSorted(arr) {

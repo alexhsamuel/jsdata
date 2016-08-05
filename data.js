@@ -4,8 +4,6 @@
 
   const permutation = require('./permutation.js')
 
-  const cmp = (a, b) => a - b
-
   // FIXME
   function formatter(width, precision) {
     const pad = ' '.repeat(width.length)
@@ -14,54 +12,67 @@
   }
   const FORMAT = formatter(4, 6)
 
+  /**
+   * A set of labels consisting of a sorted unique array of values.
+   */
   class Key {
-    constructor(arr) {
-      assert(permutation.isSorted(arr))
-      this.arr = arr
+    constructor(labels) {
+      assert(permutation.isSorted(labels))
+      assert(permutation.isUnique(labels))
+      this.labels = labels
     }
 
-    get length() { return this.arr.length }
+    get length() { return this.labels.length }
 
-    call(key) {
-      const idx = binarySearch(this.arr, key, cmp)
+    call(label) {
+      const idx = binarySearch(this.labels, label, permutation.cmp)
       assert(idx >= 0)  // FIXME: Throw.
       return idx
+    }
+
+    get(label) { return call(label) }
+
+    getAt(idx) {
+      return this.labels[idx]
     }
   }
 
   class Series {
-    constructor(key, arr) {
-      assert.equal(key.length, arr.length)
-      this.key = key
-      this.arr = arr
+    constructor(labels, values) {
+      assert.equal(labels.length, values.length)
+      this.labels = labels
+      this.values = values
     }
 
-    call(key) {
-      const idx = this.key.call(key)
-      return this.arr(idx)
+    call(label) {
+      const idx = this.labels.call(label)
+      return this.values(idx)
     }
 
-    get length() { return this.arr.length }
+    get length() { return this.values.length }
 
-    toString(keyFmt=FORMAT, fmt=FORMAT) {
+    toString(labelFmt=FORMAT, fmt=FORMAT) {
       const lines = []
       for (let i = 0; i < this.length; ++i)
-        lines.push(keyFmt(this.key.arr[i]) + ' | ' + fmt(this.arr[i]))
+        lines.push(
+          labelFmt(this.labels.getAt(i)) + ' | ' + fmt(this.values[i]))
       return lines.join('\n')
     }
 
-    static from(keyArr, arr) {
-      assert.equal(keyArr.length, arr.length)
-      let sort
-      [keyArr, sort] = permutation.sort(keyArr)
-      arr = permutation.permute(sort, arr)
-      return new Series(new Key(keyArr), arr)
-    }
   }
 
   module.exports = {
-    Key: Key,
-    Series: Series
+    Key,
+    Series,
+
+    makeSeries(labels, values) {
+      assert.equal(labels.length, values.length)
+      let sort
+      [labels, sort] = permutation.sort(labels)
+      values = permutation.permute(sort, values)
+      return new Series(new Key(labels), values)
+    },
+
   }
 
 }).call(this)
