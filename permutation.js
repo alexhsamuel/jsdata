@@ -6,7 +6,7 @@
   const IDENTITY = Symbol('identity permutation')
 
   function getArrType(len) {
-    return len < 128 ? Int8Array : len < 32768 ? Int16Array : Int32Array
+    return len < 256 ? Uint8Array : len < 65536 ? Uint32Array : Uint64Array
   }
 
   function newArr(len) {
