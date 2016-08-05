@@ -2,53 +2,7 @@
   const assert = require('assert')
   const binary_search = require('binary-search')
 
-  // The identity permutation.
-  ID_PERM = Symbol('ID_PERM')
-
-  /**
-   * Returns the permutation that sorts `arr`.
-   */
-  function argsort(arr) {
-    if (arr[SORTED]) return ID_PERM
-    const indexes = new Int32Array(arr.length)
-    for (let i = 0; i < indexes.length; ++i) indexes[i] = i
-    indexes.sort((i, j) => arr[i] - arr[j])
-    return indexes
-  }
-
-  /**
-   * Returns the permutation that inverts `permutation`.
-   */
-  function invertPermutation(permutation) {
-    if (permutiation === ID_PERM) return ID_PERM
-    const inverted = new Int32Array(permutation.length)
-    for (let i = 0; i < permutation.length; ++i) inverted[permutation[i]] = i
-    return inverted
-  }
-
-  /**
-   * Permutes array `arr` by `permutation`.
-   */
-  function permute(arr, permutation) {
-    if (permutation === ID_PERM) return arr
-    const len = arr.length
-    assert.equal(len, permutation.length)
-    const permuted = new arr.constructor(len)
-    for (let i = 0; i < len; ++i) permuted[i] = arr[permutation[i]]
-    return permuted
-  }
-
-  const SORTED = Symbol('sorted')
-
-  /**
-   * Returns sorted `arr` and its sort permutation.
-   */
-  function ensureSorted(arr) {
-    const sort = argsort(arr)
-    const sorted = permute(arr, sort)
-    sorted[SORTED] = true
-    return [sorted, sort]
-  }
+  const permutation = require('./permutation.js')
 
   const cmp = (a, b) => a - b
 
@@ -62,7 +16,7 @@
 
   class Key {
     constructor(arr) {
-      assert(arr[SORTED])
+      assert(permutation.isSorted(arr))
       this.arr = arr
     }
 
@@ -99,8 +53,8 @@
     static from(keyArr, arr) {
       assert.equal(keyArr.length, arr.length)
       let sort
-      [keyArr, sort] = ensureSorted(keyArr)
-      arr = permute(arr, sort)
+      [keyArr, sort] = permutation.sort(keyArr)
+      arr = permutation.permute(sort, arr)
       return new Series(new Key(keyArr), arr)
     }
   }
