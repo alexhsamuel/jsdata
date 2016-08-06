@@ -6,5 +6,5 @@ s1 = ops.add(s0, 10)
 console.log(s1.toString())
 console.log()
 
-s2 = ops.add(s0, s1)
+s2 = ops.sub(ops.mul(s1, 2), 1)
 console.log(s2.toString())
