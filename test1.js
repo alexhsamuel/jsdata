@@ -1,5 +1,5 @@
-d = require('./data.js')
-ops = require('./operations.js')
+d = require('data/data')
+ops = require('data/operations')
 
 s0 = d.makeSeries([2, 5, 3, 1, 0], [2.2, 5.5, 3.3, 1.1, 0.0])
 s1 = ops.add(s0, 10)
