@@ -21,14 +21,14 @@ Elementwise addition of two f64 arrays into a third. [ops0.js](ops0.js)
 
 For 16 Mi elements = 128 MiB per array: (timing error is ~10 ms?)
 
-    | platform | alloc? | time |
-    |:---------|:-------|-----:|
-    | js  | yes | 130 ms |
-    | js  | no  |  65 ms |
-    | c++ | yes |  90 ms |
-    | c++ | no  |  35 ms |
-    | py3 | yes |  90 ms |
-    | py3 | no  |  30 ms |
+| platform | alloc? | time |
+|:---------|:-------|-----:|
+| js  | yes | 130 ms |
+| js  | no  |  65 ms |
+| c++ | yes |  90 ms |
+| c++ | no  |  35 ms |
+| py3 | yes |  90 ms |
+| py3 | no  |  30 ms |
 
 `alloc?` means allocate a fresh output array on each iteration; otherwise, we reuse the same one on every iteration.  The allocation is close to free; the 60 ms "allocation" time seems to be in writing one byte to each 4 kib page.
 
