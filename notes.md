@@ -4,5 +4,5 @@ The `v8-native` package wraps some `%` V8 native functions. See [this](https://g
 
 Invoke node with `--trade-opt` and `--trace-dopt` to see the JIT optimizer at work.
 
-
+Invoke with `--print-code --print-opt-code --code-comments` to see disassembly dumps.
 
