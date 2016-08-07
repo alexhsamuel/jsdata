@@ -17,7 +17,7 @@ For,
 
 ## Vector add
 
-Elementwise addition of two f64 arrays into a third. [ops0.js](ops0.js)
+Elementwise addition of two f64 arrays into a third. [ops0.js](benchmark/ops0.js) and [ops0.py](benchmark/ops0.py)
 
 For 16 Mi elements = 128 MiB per array: (timing error is ~10 ms?)
 
