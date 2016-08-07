@@ -30,5 +30,5 @@ For 16 Mi elements = 128 MiB per array: (timing error is ~10 ms?)
 | py3 | yes |  90 ms |
 | py3 | no  |  30 ms |
 
-`alloc?` means allocate a fresh output array on each iteration; otherwise, we reuse the same one on every iteration.  The allocation is close to free; the 60 ms "allocation" time seems to be in writing one byte to each 4 kib page.  That's 3.5 ns per f64 or about 0.5 sec/GiB.
+`alloc?` means allocate a fresh output array on each iteration; otherwise, we reuse the same one on every iteration.  The allocation is close to free; the 60 ms "allocation" time seems to be in writing one byte to each 4 kiB page.  That's 3.5 ns per f64 or about 0.5 sec/GiB.
 
