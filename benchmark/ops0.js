@@ -7,7 +7,7 @@ const callTimer     = require('data/call-timer')
 const timer = callTimer.timer()
 
 function time(label, fn, ...args) {
-  console.log(label + ': ' + callTimer.format(timer(fn, ...args)))
+  console.log(label + ': ' + timer(fn, ...args) )
 }
 
 const NUM           = 1 << 24
