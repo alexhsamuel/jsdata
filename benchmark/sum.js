@@ -16,41 +16,37 @@ else {
 }
 lengths = lengths.map(l => 1 << l)
 
-function sum0(arr) {
+function sum_loop(arr) {
   const len = arr.length
   let sum = 0;
   for (let i = 0; i < len; ++i) sum = sum + arr[i]
   return sum
 }
 
-function sum1(arr) {
+function sum_reduce(arr) {
   return arr.reduce((a, b) => a + b, 0)
 }
 
 for (const len of lengths) {
+  const arr = benchmark.randomF64(len)
+  const key = benchmark.randomKey(len)
+  const ser = new data.Series(key, arr)
+  const meta = {operation: 'sum', type: 'f64', length: len, mem_size: len * 8}
+
   {
-    const arr = benchmark.randomF64(len)
-    const res = benchmark.time(sum0, arr)
-    res.length = len
-    res.mem_size = len * 8
-    console.log(JSON.stringify(res))
+    const res = benchmark.time(sum_loop, arr)
+    console.log(JSON.stringify(Object.assign(res, meta)))
   }
 
   if (false) {  // too slow!
-    const arr = benchmark.randomF64(len)
-    const res = benchmark.time(sum1, arr)
-    res.length = len
-    res.mem_size = len * 8
-    console.log(JSON.stringify(res))
+    const res = benchmark.time(sum_reduce, arr)
+    console.log(JSON.stringify(Object.assign(res, meta)))
   }
 
   {
-    const [ser] = benchmark.randomSeries(len, 1)
     const res = benchmark.time(ops.sum, ser)
     res.name = 'ops.sum'
-    res.length = len
-    res.mem_size = len * 8
-    console.log(JSON.stringify(res))
+    console.log(JSON.stringify(Object.assign(res, meta)))
   }
 }
 

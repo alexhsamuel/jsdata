@@ -17,7 +17,12 @@ def main():
     for length in lengths:
         arr0 = np.random.random(length)
         result = time(np.sum, arr0)
-        result.update(name="numpy.sum", length=length, mem_size=length * 8)
+        result.update(
+            operation="sum",
+            name="numpy.sum", 
+            type="f64", 
+            length=length, 
+            mem_size=length * 8)
         print(json.dumps(result))
 
 
