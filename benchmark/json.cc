@@ -8,6 +8,7 @@
 #include <cassert>
 #include <cstdlib>
 #include <cstring>
+#include <iomanip>
 #include <new>
 #include <string>
 
@@ -61,9 +62,14 @@ Json::print(
     os << "true";
     break;
 
-  case NUM:
-    os << std::defaultfloat << get_num();  // FIXME: Right format?  No scientific notation...
-    break;
+  case NUM: {
+    auto const num = get_num();
+    auto const long_num = (long) num;
+    if (long_num == num)
+      os << long_num;
+    else
+      os << std::fixed << std::setprecision(12) << num;
+    } break;
 
   case STR:
     os << '"';
