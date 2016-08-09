@@ -5,6 +5,6 @@ s = dat.sample
 console.log('' + s)
 console.log()
 
-s = ops.map(s, a => 2 * a - 1, 'double')
+s = ops.map(s, a => 2 * a - 1)
 console.log('' + s)
 
