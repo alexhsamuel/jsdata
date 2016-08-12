@@ -10,6 +10,6 @@ tbl = new dat.Table(
 
 console.log('' + tbl)
 
-console.log('' + tbl.columns.y)
+console.log('' + tbl.cols.y)
 
              
