@@ -74,6 +74,6 @@ function read(filename) {
   }).catch(e => console.log(e))
 }
 
-read('test/accounts.csv').then(t => console.log(t.toString())).catch(console.log)
+read('test/hmda-small.csv').then(t => console.log(t.toString())).catch(console.log)
 
 
