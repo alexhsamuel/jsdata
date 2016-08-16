@@ -6,10 +6,6 @@
 - `take(index series)`
 - array labels
 
-## IO
-
-- formatters
-
 ### input
 
 - read CSV
