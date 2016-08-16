@@ -6,13 +6,11 @@
 - `take(index series)`
 - array labels
 
-### IO
-
-Use csv reader.
+## I/O
 
 ### input
 
-- read CSV
+- use a CSV reader module
 - a nicer text-based format?
 
 ### output

@@ -9,7 +9,4 @@ tbl = new dat.Table(
   ])
 
 console.log('' + tbl)
-
 console.log('' + tbl.cols.y)
-
-             
