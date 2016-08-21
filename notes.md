@@ -32,3 +32,15 @@ For 16 Mi elements = 128 MiB per array: (timing error is ~10 ms?)
 
 `alloc?` means allocate a fresh output array on each iteration; otherwise, we reuse the same one on every iteration.  The allocation is close to free; the 60 ms "allocation" time seems to be in writing one byte to each 4 kiB page.  That's 3.5 ns per f64 or about 0.5 sec/GiB.
 
+## CSV reader
+
+For this CSV file, 1Mi rows,
+
+```
+index,id,name,normal,uniform
+0,5,RWQRTIRF,0.3178490220415918,0.7304568407944317
+1,8,ZDWFVVTY,1.1279855475232836,0.1613744720875585
+```
+
+our naïve CSV reader takes 8.6 s, while `pd.read_csv()` takes 1.6 s.
+
