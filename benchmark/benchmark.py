@@ -5,6 +5,22 @@ import sys
 import aslib.timing
 
 
+def parse_cmd_line():
+    if len(sys.argv) == 2:
+        lengths = [1 << int(sys.argv[1])]
+    elif len(sys.argv) == 3:
+        lo, hi = sys.argv[1 :]
+        lengths = [ 1 << s for s in range(int(lo), int(hi)) ]
+    else:
+        print("usage: {} SIZE [ SIZE1 ]", file=sys.stderr)
+        raise SystemExit(2)
+
+    class Args: pass
+    args = Args()
+    args.lengths = lengths
+    return args
+
+
 def get_env_info():
     now = format(datetime.datetime.utcnow(), "%Y-%m-%dT%H:%M:%SZ")
     uname = os.uname()
