@@ -33,15 +33,19 @@ function transpose(records) {
   return cols
 }
 
-// function toArray(arr) {
-//   // FIXME
-//   if (arr.length === 0) return arr
-//   else if 
-// }
+function toArray(arr) {
+  // FIXME: Utterly wrong.
+  if (arr.length === 0) return arr
+  const first = arr[0]
+  if (Number.isInteger(first)) return new Int32Array(arr)
+  else if (Number.isFinite(first)) return new Float64Array(arr)
+  else return arr
+}
 
 read(open('benchmark/filter-sum.json'))
   .then(recs => {
     const cols = transpose(recs)
+    for (const key of cols.keys()) cols.set(key, toArray(cols.get(key)))
     // FIXME: Check.
     const length = cols.values().next().value.length
     const table = new data.Table(new data.IndexKey(length), [...cols.entries()])
