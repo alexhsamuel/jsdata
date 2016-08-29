@@ -34,69 +34,11 @@ function transpose(records) {
   return cols
 }
 
-function scanArray(arr) {
-  if (arr.length === 0) return TYPES.STRING
-
-  let boolean = true
-  let number = true
-  let integer = true
-  let min = null
-  let max = null
-
-  for (const val of arr) {
-    const type = typeof val
-    if (boolean) {
-      if (type === 'boolean') continue
-      else boolean = false
-    }
-
-    if (number) {
-      if (type === 'number') {
-        if (integer && !Number.isInteger(val)) integer = false
-        if (val < min) min = val
-        if (val > max) max = val
-      }
-      else number = false
-    }
-  }
-
-  // FIXME: Combine with `ColumnScan.type`.
-  if (boolean) return TYPES.BOOL
-  if (number && integer)
-    if (min >= 0)
-      return (
-          max < 1 <<  8 ? TYPES.U8
-        : max < 1 << 16 ? TYPES.U16
-        : max <= 0x7fffffff ? TYPES.U32
-        : null  // FIXME: ??
-      )
-    else
-      return (
-          -1 <<  7 <= min && max < 1 <<  7 ? TYPES.I8
-        : -1 << 15 <= min && max < 1 << 15 ? TYPES.I16
-        : -1 << 31 <= min && max <= 0x7fffffff ? TYPES.I32
-        : null  // FIXME: ??
-      )
-  else if (number)
-    return (
-        min === null ? TYPES.F32
-      : FLOAT32_MIN <= min && max <= FLOAT32_MAX ? TYPES.F32
-      : TYPES.F64
-    )
-  else return TYPES.STRING
-}
-
-function toArray(values) {
-  const type = scanArray(values)
-  const arr = io.newArray(type, values)
-  return arr
-}
-
 read(open('benchmark/filter-sum.json'))
   .then(recs => {
     const cols = transpose(recs)
     // Replace ordinary with typed arrays.
-    for (const key of cols.keys()) cols.set(key, toArray(cols.get(key)))
+    for (const key of cols.keys()) cols.set(key, io.toTypedArray(cols.get(key)))
     // FIXME: Check.
     const length = cols.values().next().value.length
     const table = new data.Table(new data.IndexKey(length), [...cols.entries()])
