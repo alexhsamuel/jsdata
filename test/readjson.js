@@ -2,6 +2,7 @@
 
 const data = require('data/data')
 const fs = require('fs')
+const io = require('data/io')
 const readline = require('readline')
 
 function open(filename) {
@@ -34,6 +35,8 @@ function transpose(records) {
 }
 
 function scanArray(arr) {
+  if (arr.length === 0) return TYPES.STRING
+
   let boolean = true
   let number = true
   let integer = true
@@ -58,9 +61,8 @@ function scanArray(arr) {
   }
 
   // FIXME: Combine with `ColumnScan.type`.
-  if (length === 0) return TYPES.STRING
   if (boolean) return TYPES.BOOL
-  if (integer)
+  if (number && integer)
     if (min >= 0)
       return (
           max < 1 <<  8 ? TYPES.U8
@@ -84,18 +86,16 @@ function scanArray(arr) {
   else return TYPES.STRING
 }
 
-function toArray(arr) {
-  // FIXME: Utterly wrong.
-  if (arr.length === 0) return arr
-  const first = arr[0]
-  if (Number.isInteger(first)) return new Int32Array(arr)
-  else if (Number.isFinite(first)) return new Float64Array(arr)
-  else return arr
+function toArray(values) {
+  const type = scanArray(values)
+  const arr = io.newArray(type, values)
+  return arr
 }
 
 read(open('benchmark/filter-sum.json'))
   .then(recs => {
     const cols = transpose(recs)
+    // Replace ordinary with typed arrays.
     for (const key of cols.keys()) cols.set(key, toArray(cols.get(key)))
     // FIXME: Check.
     const length = cols.values().next().value.length
