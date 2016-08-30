@@ -42,7 +42,5 @@ index,id,name,normal,uniform
 1,8,ZDWFVVTY,1.1279855475232836,0.1613744720875585
 ```
 
-our naïve CSV reader takes 8.6 s, while `pd.read_csv()` takes 1.6 s.
-
-The `csv-parse` module's stream API takes 10.9 s to parse (no storing or printing) the file; see [csv3.js](test/csv3.js).  The `fast-csv` module takes 8.6 s to parse it; see [csv2.js](test/csv2.js).
+our naïve CSV reader (which doesn't understand quoting) takes 8.6 s, while `pd.read_csv()` takes 1.6 s.  The `csv-parse` module's stream API takes 10.9 s to parse (no storing or printing) the file; see [csv3.js](test/csv3.js).  The `fast-csv` module takes 8.6 s to parse it; see [csv2.js](test/csv2.js).  Using `fast-csv`, our CSV reader to `Table` takes 20.8 s.
 
