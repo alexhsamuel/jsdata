@@ -18,11 +18,12 @@ def do(length):
     arr0 = np.random.random(length)
     result = time(np_summarize_0, arr0)
     result.update(
-        operation="summarize",
-        name="np_summarize_0", 
-        type="f64", 
-        length=length, 
-        mem_size=length * 8)
+        operation   ="summarize",
+        name        ="np_summarize_0", 
+        type        ="f64", 
+        length      =length, 
+        mem_size    =length * 8
+    )
     return result
 
 
