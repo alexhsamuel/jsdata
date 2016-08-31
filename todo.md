@@ -10,12 +10,10 @@
 
 ### input
 
-- use a CSV reader module
 - a nicer text-based format?
 
 ### output
 
-- render as text
 - render as Markdown table
 - render as HTML table (to code? directly to DOM?)
 
