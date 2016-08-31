@@ -6,20 +6,22 @@ import sys
 
 import aslib.timing
 
+Mi = 1048576
+
 def output_json(results):
     for result in results:
         print(json.dumps(result))
 
 
 def output_table(results):
-    print("length    time       rate        bandwidth    ")
-    print("--------- ---------- ----------- -------------")
+    print("length    time         rate        bandwidth    ")
+    print("--------- ------------ ----------- -------------")
     for res in results:
-        print("{:9d} {:10.6f} {:6.1f} Mi/s {:7.1f} MiB/s".format(
+        print("{:9d} {:10.6f} s {:6.1f} Mi/s {:7.1f} MiB/s".format(
             res["length"],
             res["time"],
-            res["length"] / res["time"] / 1048576,
-            res["mem_size"] / res["time"] / 1048576,
+            res["length"] / res["time"] / Mi,
+            res["mem_size"] / res["time"] / Mi,
         ))
 
 
