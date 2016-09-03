@@ -5,23 +5,30 @@ import os
 import sys
 
 import aslib.timing
-
-Mi = 1048576
+import fixfmt
+import fixfmt.table
 
 def output_json(results):
     for result in results:
         print(json.dumps(result))
 
 
+TABLE = fixfmt.table.Simple((
+    ("length"       , fixfmt.Number(9)),
+    ("time"         , fixfmt.Number(3, 6)),
+    ("rate"         , fixfmt.Number(4, 1, scale="Mi")),
+    ("bandwidth"    , fixfmt.Number(5, 1, scale="Mi")),
+))
+
 def output_table(results):
-    print("length    time         rate        bandwidth    ")
-    print("--------- ------------ ----------- -------------")
+    print(TABLE.header)
+    print(TABLE.underline)
     for res in results:
-        print("{:9d} {:10.6f} s {:6.1f} Mi/s {:7.1f} MiB/s".format(
+        print(TABLE.row(
             res["length"],
             res["time"],
-            res["length"] / res["time"] / Mi,
-            res["mem_size"] / res["time"] / Mi,
+            res["length"] / res["time"],
+            res["mem_size"] / res["time"],
         ))
 
 

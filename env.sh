@@ -5,3 +5,4 @@ function node() {
     $NODE_DIR/bin/node --allow-natives-syntax "$@";
 }
 
+export PYTHONPATH=$HOME/dev/aslib/python:$HOME/dev/fixfmt/python
