@@ -6,14 +6,14 @@ import sys
 
 import aslib.timing
 import fixfmt
-import fixfmt.table
+import fixfmt.tbl
 
 def output_json(results):
     for result in results:
         print(json.dumps(result))
 
 
-TABLE = fixfmt.table.Simple((
+TABLE = fixfmt.tbl.BoxTable((
     ("length"       , fixfmt.Number(9)),
     ("time"         , fixfmt.Number(3, 6)),
     ("rate"         , fixfmt.Number(4, 1, scale="Mi")),
@@ -21,15 +21,15 @@ TABLE = fixfmt.table.Simple((
 ))
 
 def output_table(results):
-    print(TABLE.header)
-    print(TABLE.underline)
-    for res in results:
-        print(TABLE.row(
+    TABLE.print((
+        (
             res["length"],
             res["time"],
             res["length"] / res["time"],
             res["mem_size"] / res["time"],
-        ))
+        )
+        for res in results
+    ))
 
 
 def parse_cmd_line():
