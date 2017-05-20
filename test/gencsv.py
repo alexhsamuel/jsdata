@@ -11,7 +11,14 @@ import aslib.pandas.random as rnd
 gen = rnd.dataframe(
     id      =rnd.cumsum(rnd.uniform_int(1, 10)),
     name    =rnd.word(8, upper=True),
-    normal  =rnd.normal(),
+    normal0 =rnd.normal(),
+    normal1 =rnd.normal(),
+    normal2 =rnd.normal(),
+    normal3 =rnd.normal(),
+    normal4 =rnd.normal(),
+    normal5 =rnd.normal(),
+    normal6 =rnd.normal(),
+    normal7 =rnd.normal(),
     uniform =rnd.uniform(),
 )
 
