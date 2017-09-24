@@ -1,4 +1,5 @@
 (function () {
+  'use strict'
 
   const _ = require('underscore')
   const fastCsv = require('fast-csv')

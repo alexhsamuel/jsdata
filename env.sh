@@ -1,8 +1,9 @@
-NODE_DIR=$(echo $HOME/sw/node-v6.3.1-*)
-PATH=$NODE_DIR/bin:$PATH
+NODE_DIR=$(echo $HOME/sw/node-v8*)
+path P ++ $NODE_DIR/bin
+path JS ++ $(dirname $BASH_SOURCE)
 
-function node() {
-    $NODE_DIR/bin/node --allow-natives-syntax "$@";
-}
+# function node() {
+#     $NODE_DIR/bin/node --allow-natives-syntax "$@";
+# }
 
 export PYTHONPATH=$HOME/dev/aslib/python:$HOME/dev/fixfmt/python

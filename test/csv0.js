@@ -1,3 +1,4 @@
+'use strict'
 io = require('data/io')
 synch = require('synchronize')
 
