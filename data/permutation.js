@@ -15,7 +15,7 @@
 
   module.exports = {
 
-    cmp: (a, b) => a - b,
+    cmp: (a, b) => a > b ? 1 : a == b ? 0 : -1,
 
     /**
      * Returns the inverse permutation.
@@ -63,11 +63,13 @@
 
     isSorted(arr) {
       const len = arr.length
-      if (arr === IDENTITY || arr[SORTED] || len < 2) return true
+      if (arr === IDENTITY || arr[SORTED] || len < 2)
+        return true
 
       let val = arr[0]
       for (let i = 1; i < len; ++i) {
-        if (arr[i] < val) return false
+        if (arr[i] < val)
+          return false
         val = arr[i]
       }
 
@@ -82,11 +84,12 @@
      */
     argsort(arr) {
       const len = arr.length
-      if (this.isSorted(arr)) return IDENTITY
+      if (this.isSorted(arr))
+        return IDENTITY
 
       const perm = newArr(len)
       for (let i = 0; i < len; ++i) perm[i] = i
-      perm.sort((i, j) => arr[i] - arr[j])
+      perm.sort((i, j) => this.cmp(arr[i], arr[j]))
       return perm
     },
 

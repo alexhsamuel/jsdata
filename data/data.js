@@ -23,14 +23,11 @@
 
     get length() { return this.labels.length }
 
-    // FIXME: This isn't __call__!
-    call(label) {
-      const idx = binarySearch(this.labels, label, permutation.cmp)
+    get(label) {
+      const idx = binary_search(this.labels, label, permutation.cmp)
       assert(idx >= 0)  // FIXME: Throw.
       return idx
     }
-
-    get(label) { return call(label) }
 
     getAt(idx) {
       return this.labels[idx]
@@ -50,7 +47,7 @@
       assert(0 <= idx && idx < this.length)
       return label
     }
-      
+
     getAt(idx) {
       return idx
     }
@@ -63,9 +60,9 @@
       this.values = values
     }
 
-    call(label) {
-      const idx = this.labels.call(label)
-      return this.values(idx)
+    get(label) {
+      const idx = this.labels.get(label)
+      return this.values[idx]
     }
 
     get length() { return this.values.length }
@@ -80,15 +77,15 @@
 
       // Header.
       lines.push(
-          format.palide('key', labelFmt.width) + ' | ' 
+          format.palide('key', labelFmt.width) + ' '
         + format.palide('value', fmt.width))
       // Underline.
-      lines.push('='.repeat(labelFmt.width) + ' | ' + '-'.repeat(fmt.width))
+      lines.push('\u2501'.repeat(labelFmt.width) + '\u252d' + '\u2500'.repeat(fmt.width))
 
       for (let i = 0; i < this.length; ++i)
         lines.push(
-          labelFmt(this.labels.getAt(i)) + ' | ' + fmt(this.values[i]))
-                 
+          labelFmt(this.labels.getAt(i)) + '\u2502' + fmt(this.values[i]))
+
       lines.push('')
       return lines.join('\n')
     }
@@ -110,7 +107,7 @@
       this.columns = columns
 
       this.cols = {}
-      for (let [name, arr] of columns) 
+      for (let [name, arr] of columns)
         if (name)
           Object.defineProperty(
             this.cols, name, {
@@ -124,7 +121,7 @@
     get length() { return this.labels.length }
     get names() { return this.columns.map(([n, _]) => n) }
     get arrays() { return this.columns.map(([_, a]) => a) }
-    
+
     // FIXME: Do better with formatters.
     toString(labelFmt=FORMAT, fmts=null) {
       const lines = []
@@ -149,9 +146,9 @@
       lines.push('')
       return lines.join('\n')
     }
-    
+
   }
-  
+
 
   module.exports = {
     IndexKey,
@@ -162,4 +159,3 @@
   }
 
 }).call(this)
-
