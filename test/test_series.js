@@ -8,3 +8,11 @@ test(t => {
   t.true(s.get('bar') == 7)
   t.true(s.get('baz') == 8)
 })
+
+test('indexed series', t => {
+  const s = makeSeries(null, ['foo', 'bar', 'baz'])
+  t.true(s.length == 3)
+  t.true(s.get(0) == 'foo')
+  t.true(s.get(1) == 'bar')
+  t.true(s.get(2) == 'baz')
+})
