@@ -1,7 +1,7 @@
 import { test } from 'ava'
 import { makeSeries } from '../lib'
 
-test(t => {
+test('single series', t => {
   const s = makeSeries(['foo', 'bar', 'baz'], [6, 7, 8])
  	t.true(s.length == 3)
   t.true(s.get('foo') == 6)
