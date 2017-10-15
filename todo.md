@@ -1,22 +1,3 @@
-# Components
-
-- bool series
-- `mask(bool series)`
-- index series
-- `take(index series)`
-- array labels
-
-## I/O
-
-### input
-
-- a nicer text-based format?
-
-### output
-
-- render as Markdown table
-- render as HTML table (to code? directly to DOM?)
-
 
 # Benchmarking
 
@@ -33,4 +14,3 @@ See [Rigorous Benchmarking in Reasonable Time](https://kar.kent.ac.uk/33611/7/pa
 - run nice and with process-core affinity
 
 - split out into a separate multi-language benchmarking repo
-
