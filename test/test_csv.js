@@ -18,3 +18,10 @@ test('prec', t => {
     t.is(tbl.length, 6)
   })
 })
+
+test('8k', t => {
+  return readCsv('test/testcsv-8Ki.csv').then(tbl => {
+    console.log('' + tbl)
+    t.is(tbl.length, 8192)
+  })
+})
