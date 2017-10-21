@@ -1,5 +1,5 @@
 import { test } from 'ava'
-import { makeSeries } from '../lib'
+import { makeSeries, joinLeft } from '../lib'
 
 test('single series', t => {
   const s = makeSeries(['foo', 'bar', 'baz'], [6, 7, 8])
@@ -26,3 +26,14 @@ test('multi series', t => {
   t.true(s.get('foo', 1) == 101)
   t.true(s.get('foo', 2) == 102)
 })
+
+test('leftJoin', t => {
+  const l = makeSeries(['foo', 'bar', 'baz'], [6, 7, 8])
+  const r = makeSeries(['baz', 'foo', 'bif', 'bom'], [1, 2, 3, 4])
+  const j = joinLeft(l, r, 0)
+  t.is(j.length, l.length)
+  t.is(j.key, l.key)
+  t.deepEqual(Array.from(j.key.labels[0]), ['bar', 'baz', 'foo'])
+  t.deepEqual(Array.from(j.values), [0, 1, 2])
+})
+
