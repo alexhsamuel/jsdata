@@ -1,7 +1,13 @@
-import { test } from 'ava'
-import { MultiKey } from '../lib'
+'use strict'
+
+const test          = require('ava')
+const MultiKey      = require('../lib/key.js').MultiKey
+const keymod        = require('../lib/key.js')
+
+//------------------------------------------------------------------------------
 
 test('MultiKey basic', t => {
+  console.log(MultiKey)
   const key = new MultiKey(
     ['bar', 'baz', 'foo', 'foo'],
     [3, 4, 2, 3])
@@ -12,3 +18,4 @@ test('MultiKey basic', t => {
   t.true(key.get('foo', 3) == 3)
   t.throws(() => key.get('foo', 4), Error)
 })
+

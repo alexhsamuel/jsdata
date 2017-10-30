@@ -1,5 +1,10 @@
-import { test } from 'ava'
-import { align } from '../lib'
+'use strict'
+
+const test          = require('ava')
+
+const align         = require('../lib/align.js')
+
+//------------------------------------------------------------------------------
 
 test('leftAlign', t => {
   const a0 = [2, 3, 5, 6, 8, 9]

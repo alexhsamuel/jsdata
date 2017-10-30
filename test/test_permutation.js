@@ -1,6 +1,9 @@
-import * as _ from 'underscore'
-import { test } from 'ava'
-import { permutation } from '../lib'
+'use strict'
+
+const _ = require('underscore')
+const test = require('ava').test
+
+const permutation = require('../lib/permutation.js')
 
 test('argsearchMulti basic0', t => {
   const arrs = [[30, 30, 40, 50], [2, 3, 1, 2]]

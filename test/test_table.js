@@ -1,9 +1,15 @@
-import _ from 'underscore'
-import { test } from 'ava'
-import { makeTable, Series } from '../lib'
+'use strict'
+
+const _             = require('underscore')
+const test          = require('ava')
+
+const Series        = require('../lib/series.js').Series
+const table         = require('../lib/table.js')
+
+//------------------------------------------------------------------------------
 
 test('indexed table', t => {
-  const tbl = makeTable(null, {foo: [3, 4, 5, 6], bar: ['a', 'c', 'd', 'b']})
+  const tbl = table.makeTable(null, {foo: [3, 4, 5, 6], bar: ['a', 'c', 'd', 'b']})
   t.is(tbl.length, 4)
   t.deepEqual(tbl.names, ['foo', 'bar'])
 
@@ -21,7 +27,7 @@ test('indexed table', t => {
 })
 
 test('multikey table', t => {
-  const tbl = makeTable(
+  const tbl = table.makeTable(
     [
       ['bar', 'bar', 'foo'],
       [2, 3, 2]

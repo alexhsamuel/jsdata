@@ -1,6 +1,10 @@
-import { test } from 'ava'
+'use strict'
 
-import { readCsv } from '../lib'
+const test          = require('ava')
+
+const readCsv       = require('../lib/csv.js').read
+
+//------------------------------------------------------------------------------
 
 test('accounts', t => {
   return readCsv('test/accounts.csv').then(tbl => {
